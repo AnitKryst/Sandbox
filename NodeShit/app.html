@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+		<script type="text/javascript">
+			function MainController($scope, $http, $window) {
+				$scope.start = new Date().getTime();
+				$scope.last = new Date().getTime();
+				$scope.delta = 0;
+				$scope.frames = 0;
+				$scope.errors = 0;
+				$scope.TickServer = function(){
+					$http({
+						url: "/api/ass", 
+						method: "POST", 
+						data: JSON.stringify({c:$scope.clicks}),
+						headers: {'Content-Type': 'application/json'},
+					}).success($scope.OnSuccess).error($scope.OnError);
+				};
+				$scope.OnSuccess = function(data, status, headers, config) {
+					$scope.frames = $scope.frames + 1;
+					var t = new Date().getTime();
+					$scope.delta = t - $scope.last;
+					$scope.last = t;
+					$scope.TickServer();
+				};
+				$scope.OnError = function(data, status, headers, config) {
+					$scope.errors = $scope.errors + 1;
+				};
+				$scope.Hmm = function() {
+					$scope.start = new Date().getTime();
+					$scope.last = new Date().getTime();
+					$scope.TickServer();
+				}
+			}
+		</script>
+	</head>
+	<body ng-app ng-controller="MainController">
+		<div>Frames: {{frames}}</div>
+		<div>Errors: {{errors}}</div>
+		<div>Average Calls Per Second: {{(frames * 1000) / (last - start)}}</div>
+		<button ng-click="Hmm()">Go</button>
+	</body>
+</html>
