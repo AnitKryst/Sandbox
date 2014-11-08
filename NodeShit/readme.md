@@ -1,3 +1,3 @@
-To run this shit, find the directory on your computer with a command line or something then type "nodejs fuckit.js" after which you can browse to "http://localhost:15000" and click "Go". 
+To run this shit, find the directory on your computer with a command line or something then type "node fuckit.js" after which you can browse to "http://localhost:15000" and click "Go". 
 
 The whole point was to synchronize timing between server and client, and see if node could keep up a response rate that might be "game" worthy. There is a tickDelay in the node script that can be tweaked to control the rate of responses from the server.
