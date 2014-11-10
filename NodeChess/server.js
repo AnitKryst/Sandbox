@@ -22,12 +22,41 @@ baseRouter.route('/')
 
 baseRouter.route('/api/games')
 	.get(function(req, res){
-		res.json([{id:1,player1:{id:1,name:"player1"},player2:{id:2,name:"player2"}}]);
+		var db = ravendb('http://localhost:11011','NodeChess');
+		db.getDocument('/games', function(err, result){
+			if (err){
+				console.error(err);
+				res.status(404).send('Not found');
+			}
+			else
+				res.json(result);
+		});
 	});
 
 baseRouter.route('/api/players')
 	.get(function(req, res){
-		res.json([{id:1,name:"player1"},{id:2,name:"player2"}]);
+		var db = ravendb('http://localhost:11011','NodeChess');
+		db.getDocument('/players', function(err, result){
+			if (err){
+				console.error(err);
+				res.status(404).send('Not found');
+			}
+			else
+				res.json(result);
+		});
+	});
+
+baseRouter.route('/api/player')
+	.post(function(req,res){
+		var db = ravendb('http://localhost:11011','NodeChess');
+		db.saveDocument('/players', {'id':''} , function(err, result){
+			if (err){
+				console.error(err);
+				res.status(503).send('Not found');
+			}
+			else
+				res.json(result);
+		});
 	});
 
 app.listen(process.env.PORT || 15151);
